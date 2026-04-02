@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>App Overview — multi-symfony + multi-symfony-front</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'heading': ['Unbounded', 'sans-serif'],
+                        'body': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#fdf2f8',
+                            100: '#fce7f3',
+                            200: '#fbcfe8',
+                            300: '#f9a8d4',
+                            400: '#f472b6',
+                            500: '#ec4899',
+                            600: '#db2777',
+                            700: '#be185d',
+                            800: '#9d174d',
+                            900: '#831843',
+                            DEFAULT: '#e6007a'
+                        },
+                        accent: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                            DEFAULT: '#6d3aee'
+                        },
+                        surface: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#020617'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-slate-950 text-slate-100 font-sans antialiased">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-primary-900 to-surface-900 border-b border-primary-700/40 px-8 py-6">
+        <div class="max-w-7xl mx-auto flex items-center gap-4">
+            <div
+                class="w-10 h-10 rounded-xl bg-primary-500 flex items-center justify-center text-white font-bold text-lg">
+                M</div>
+            <div>
+                <h1 class="text-2xl font-bold text-white tracking-tight">multi-symfony</h1>
+                <p class="text-primary-100/70 text-sm">Technical Overview — Symfony 8 · GraphQL · React 18 · TypeScript
+                </p>
+            </div>
+            <div class="ml-auto flex gap-2">
+                <span
+                    class="px-3 py-1 rounded-full bg-primary-700/50 text-primary-100 text-xs font-medium border border-primary-600/40">v1.0</span>
+                <span
+                    class="px-3 py-1 rounded-full bg-emerald-900/50 text-emerald-300 text-xs font-medium border border-emerald-700/40">PHP
+                    8.4</span>
+                <span
+                    class="px-3 py-1 rounded-full bg-accent-900/50 text-accent-300 text-xs font-medium border border-accent-700/40">React
+                    18</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Nav -->
+    <nav class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur border-b border-slate-800 px-8 py-3">
+        <div class="max-w-7xl mx-auto flex flex-wrap gap-x-6 gap-y-1 text-sm">
+            <a href="#overview" class="text-primary-400 hover:text-white transition">Overview</a>
+            <a href="#architecture" class="text-slate-400 hover:text-white transition">Architecture</a>
+            <a href="#auth" class="text-slate-400 hover:text-white transition">Authentication</a>
+            <a href="#entities" class="text-slate-400 hover:text-white transition">Entities</a>
+            <a href="#graphql" class="text-slate-400 hover:text-white transition">GraphQL Schema</a>
+            <a href="#frontend" class="text-slate-400 hover:text-white transition">Frontend</a>
+            <a href="#routes" class="text-slate-400 hover:text-white transition">Routes</a>
+            <a href="#security" class="text-slate-400 hover:text-white transition">Security</a>
+            <a href="#flows" class="text-slate-400 hover:text-white transition">Key Flows</a>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-8 py-12 space-y-20">
+
+        <!-- ─── Overview ─── -->
+        <section id="overview">
+            <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                <span
+                    class="w-7 h-7 rounded-lg bg-primary-600 flex items-center justify-center text-white text-xs font-bold">01</span>
+                Overview
+            </h2>
+            <p class="text-slate-300 leading-relaxed max-w-3xl">
+                A <strong class="text-white">professional booking platform</strong> where users can discover
+                professionals, book appointments,
+                exchange appointment-scoped messages, and manage their profile. Professionals manage their services and
+                calendar.
+                Admins have full platform visibility.
+            </p>
+
+            <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                    <div class="text-3xl font-bold text-primary-400">3</div>
+                    <div class="text-slate-400 text-sm mt-1">Actor types</div>
+                    <div class="text-slate-500 text-xs mt-2">User · Professional · Admin</div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                    <div class="text-3xl font-bold text-emerald-400">1</div>
+                    <div class="text-slate-400 text-sm mt-1">API endpoint</div>
+                    <div class="text-slate-500 text-xs mt-2">POST /graphql</div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                    <div class="text-3xl font-bold text-purple-400">13+</div>
+                    <div class="text-slate-400 text-sm mt-1">Frontend pages</div>
+                    <div class="text-slate-500 text-xs mt-2">Public · Protected · Admin</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── Architecture ─── -->
+        <section id="architecture">
+            <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                <span
+                    class="w-7 h-7 rounded-lg bg-primary-600 flex items-center justify-center text-white text-xs font-bold">02</span>
+                Architecture
+            </h2>
+
+            <!-- Stack cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- Backend -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-emerald-700/40 flex items-center justify-center text-emerald-400 text-xs font-bold">
+                            BE</div>
+                        <h3 class="font-semibold text-white">Backend — multi-symfony</h3>
+                    </div>
+                    <ul class="space-y-2 text-sm text-slate-300">
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">▸</span><span><strong
+                                    class="text-white">Symfony 8</strong> · PHP 8.4 · Doctrine ORM 3</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">▸</span><span><strong
+                                    class="text-white">webonyx/graphql-php</strong> ^15 — hand-built schema (no API
+                                Platform)</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">▸</span><span><strong
+                                    class="text-white">lexik/jwt-authentication-bundle</strong> — RS256, TTL
+                                3600s</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">▸</span><span><strong
+                                    class="text-white">predis/predis</strong> — Redis cache for public professional
+                                listings</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">▸</span><span><strong
+                                    class="text-white">stof/doctrine-extensions</strong> — Timestampable
+                                (createdAt/updatedAt)</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">▸</span><span><strong
+                                    class="text-white">nelmio/cors-bundle</strong> — Cross-origin for React dev
+                                server</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">▸</span><span><strong
+                                    class="text-white">PostgreSQL</strong> — JSONB columns for languages arrays</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Frontend -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-purple-700/40 flex items-center justify-center text-purple-400 text-xs font-bold">
+                            FE</div>
+                        <h3 class="font-semibold text-white">Frontend — multi-symfony-front</h3>
+                    </div>
+                    <ul class="space-y-2 text-sm text-slate-300">
+                        <li class="flex items-start gap-2"><span class="text-purple-400 mt-0.5">▸</span><span><strong
+                                    class="text-white">React 18</strong> · TypeScript 5 · Vite 5</span></li>
+                        <li class="flex items-start gap-2"><span class="text-purple-400 mt-0.5">▸</span><span><strong
+                                    class="text-white">@apollo/client</strong> ^3.11 — InMemoryCache,
+                                cache-and-network</span></li>
+                        <li class="flex items-start gap-2"><span class="text-purple-400 mt-0.5">▸</span><span><strong
+                                    class="text-white">react-router-dom</strong> ^6.28 — createBrowserRouter</span></li>
+                        <li class="flex items-start gap-2"><span class="text-purple-400 mt-0.5">▸</span><span><strong
+                                    class="text-white">react-hook-form + zod</strong> — form validation</span></li>
+                        <li class="flex items-start gap-2"><span class="text-purple-400 mt-0.5">▸</span><span><strong
+                                    class="text-white">Tailwind CSS 3</strong> — utility-first styling</span></li>
+                        <li class="flex items-start gap-2"><span class="text-purple-400 mt-0.5">▸</span><span><strong
+                                    class="text-white">Atomic Design</strong> — atoms → molecules → organisms →
+                                pages</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Data flow diagram -->
+            <div class="mt-6 bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Request Flow</h3>
+                <div class="flex flex-wrap items-center gap-2 text-sm">
+                    <div class="px-4 py-2 bg-purple-900/50 border border-purple-700/50 rounded-lg text-purple-200">React
+                        App</div>
+                    <span class="text-slate-500">— Apollo authLink injects Bearer token →</span>
+                    <div class="px-4 py-2 bg-primary-900/50 border border-primary-700/50 rounded-lg text-primary-200">
+                        POST
+                        /graphql</div>
+                    <span class="text-slate-500">→</span>
+                    <div class="px-4 py-2 bg-emerald-900/50 border border-emerald-700/50 rounded-lg text-emerald-200">
+                        GraphQLController</div>
+                    <span class="text-slate-500">→</span>
+                    <div class="px-4 py-2 bg-amber-900/50 border border-amber-700/50 rounded-lg text-amber-200">
+                        SchemaBuilder / Resolvers</div>
+                    <span class="text-slate-500">↔</span>
+                    <div class="px-4 py-2 bg-rose-900/50 border border-rose-700/50 rounded-lg text-rose-200">Doctrine
+                        ORM / PostgreSQL</div>
+                </div>
+                <p class="text-slate-500 text-xs mt-4">Redis caches public professionals list (5 min) and language
+                    filter list (10 min). Cache is invalidated on profile or service updates.</p>
+            </div>
+        </section>
+
+        <!-- ─── Authentication ─── -->
+        <section id="auth">
+            <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                <span
+                    class="w-7 h-7 rounded-lg bg-primary-600 flex items-center justify-center text-white text-xs font-bold">03</span>
+                Authentication
+            </h2>
+
+            <!-- Success callout -->
+            <div class="bg-emerald-950/50 border border-emerald-700/50 rounded-xl p-5 mb-6 flex gap-4">
+                <span class="text-emerald-400 text-xl mt-0.5">✓</span>
+                <div>
+                    <p class="text-emerald-300 font-semibold text-sm">Secure implementation: HttpOnly cookies + memory
+                        tokens
+                    </p>
+                    <p class="text-emerald-200/70 text-sm mt-1">
+                        Refresh tokens stored in HttpOnly cookies, access tokens kept in memory only. Protected against
+                        XSS attacks.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- Current approach -->
+                <div class="bg-surface-900 border border-emerald-800/30 rounded-xl p-6">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-emerald-400">✓</span>
+                        <h3 class="font-semibold text-white text-sm">Current — HttpOnly Cookies + Memory Tokens</h3>
+                    </div>
+                    <ol class="space-y-2 text-sm text-surface-300">
+                        <li class="flex gap-2"><span class="text-surface-500 shrink-0">1.</span>Login POST to <code
+                                class="bg-surface-800 px-1 rounded text-xs">/api/auth/login</code> → server validates
+                            credentials</li>
+                        <li class="flex gap-2"><span class="text-surface-500 shrink-0">2.</span>Symfony sets HttpOnly
+                            refresh cookie: <code
+                                class="bg-surface-800 px-1 rounded text-xs">Set-Cookie: refresh_token=...; HttpOnly; Secure; SameSite=Lax</code>
+                        </li>
+                        <li class="flex gap-2"><span class="text-surface-500 shrink-0">3.</span>Server returns access
+                            token in JSON response (short-lived, 15 min)</li>
+                        <li class="flex gap-2"><span class="text-surface-500 shrink-0">4.</span>Frontend stores access
+                            token in memory only (not localStorage)</li>
+                        <li class="flex gap-2"><span class="text-surface-500 shrink-0">5.</span>Apollo sends <code
+                                class="bg-surface-800 px-1 rounded text-xs">Authorization: Bearer &lt;access_token&gt;</code>
+                            + <code class="bg-surface-800 px-1 rounded text-xs">credentials: include</code></li>
+                        <li class="flex gap-2"><span class="text-surface-500 shrink-0">6.</span>On 401, frontend uses
+                            refresh cookie to get new access token</li>
+                    </ol>
+                    <div class="mt-4 pt-4 border-t border-surface-800">
+                        <p class="text-xs text-emerald-400">Security: Refresh tokens inaccessible to JS, access tokens
+                            evaporate on page reload.</p>
+                    </div>
+                </div>
+
+                <!-- Previous insecure approach -->
+                <div class="bg-surface-900 border border-red-800/30 rounded-xl p-6">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-red-400">✗</span>
+                        <h3 class="font-semibold text-white text-sm">Avoided — JWT in localStorage</h3>
+                    </div>
+                    <ol class="space-y-2 text-sm text-surface-300">
+                        <li class="flex gap-2"><span class="text-surface-500 shrink-0">1.</span>Login mutation → server
+                            returns <code class="bg-surface-800 px-1 rounded text-xs">{ token, role, email }</code></li>
+                        <li class="flex gap-2"><span class="text-surface-500 shrink-0">2.</span><code
+                                class="bg-surface-800 px-1 rounded text-xs">AuthContext.login()</code> writes to <code
+                                class="bg-surface-800 px-1 rounded text-xs">localStorage["mssf_auth"]</code></li>
+                        <li class="flex gap-2"><span class="text-surface-500 shrink-0">3.</span>Apollo <code
+                                class="bg-surface-800 px-1 rounded text-xs">authLink</code> reads localStorage before
+                            every GraphQL request</li>
+                        <li class="flex gap-2"><span class="text-surface-500 shrink-0">4.</span>Injects <code
+                                class="bg-surface-800 px-1 rounded text-xs">Authorization: Bearer &lt;token&gt;</code>
+                            header</li>
+                        <li class="flex gap-2"><span class="text-surface-500 shrink-0">5.</span>Symfony firewall
+                            validates JWT (stateless), no session created</li>
+                        <li class="flex gap-2"><span class="text-surface-500 shrink-0">6.</span><code
+                                class="bg-surface-800 px-1 rounded text-xs">errorLink</code> auto-clears storage +
+                            redirects to /login on 401</li>
+                    </ol>
+                    <div class="mt-4 pt-4 border-t border-surface-800">
+                        <p class="text-xs text-red-400">Risk: XSS can steal the token. localStorage is accessible to all
+                            JS on the page.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JWT anatomy -->
+            <div class="mt-6 bg-surface-900 border border-surface-800 rounded-xl p-6">
+                <h3 class="text-sm font-semibold text-surface-400 uppercase tracking-wider mb-4">JWT Configuration
+                    (Symfony)</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                    <div><span class="text-surface-500">Algorithm</span>
+                        <p class="text-white font-medium mt-1">RS256 (asymmetric)</p>
+                    </div>
+                    <div><span class="text-surface-500">Access Token TTL</span>
+                        <p class="text-white font-medium mt-1">900 seconds (15 min)</p>
+                    </div>
+                    <div><span class="text-surface-500">Refresh Token TTL</span>
+                        <p class="text-white font-medium mt-1">604800 seconds (7 days)</p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-surface-800">
+                    <p class="text-xs text-surface-500">
+                        <code class="bg-surface-800 px-1 rounded">AppUserProvider</code> resolves the entity (Admin →
+                        Professional → User) by email at JWT decode time.
+                        Authorization is enforced <em>inside each resolver</em>, not at the firewall level — the <code
+                            class="bg-surface-800 px-1 rounded">/graphql</code> route is <code
+                            class="bg-surface-800 px-1 rounded">PUBLIC_ACCESS</code>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── Entities ─── -->
+        <section id="entities">
+            <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                <span
+                    class="w-7 h-7 rounded-lg bg-primary-600 flex items-center justify-center text-white text-xs font-bold">04</span>
+                Database Entities
+            </h2>
+
+            <div class="space-y-4">
+
+                <!-- Entity table helper macro via repeated blocks -->
+
+                <!-- User -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                    <div class="flex items-center gap-3 px-5 py-3 bg-slate-800/60 border-b border-slate-700/50">
+                        <span class="px-2 py-0.5 rounded bg-blue-700/40 text-blue-300 text-xs font-mono">users</span>
+                        <h3 class="font-semibold text-white text-sm">User</h3>
+                        <span class="ml-auto text-xs text-slate-500">role = "user" (fixed)</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="text-left border-b border-slate-800">
+                                    <th class="px-5 py-2 text-slate-500 font-medium">Field</th>
+                                    <th class="px-5 py-2 text-slate-500 font-medium">Type</th>
+                                    <th class="px-5 py-2 text-slate-500 font-medium">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/50 text-slate-300">
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-primary-300 text-xs">id</td>
+                                    <td class="px-5 py-2">int</td>
+                                    <td class="px-5 py-2 text-slate-500">PK, auto-increment</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-primary-300 text-xs">firstName</td>
+                                    <td class="px-5 py-2">string</td>
+                                    <td class="px-5 py-2 text-slate-500"></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-primary-300 text-xs">lastName</td>
+                                    <td class="px-5 py-2">string</td>
+                                    <td class="px-5 py-2 text-slate-500"></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-primary-300 text-xs">username</td>
+                                    <td class="px-5 py-2">string</td>
+                                    <td class="px-5 py-2 text-slate-500">Unique, auto-lowercased</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-primary-300 text-xs">email</td>
+                                    <td class="px-5 py-2">string</td>
+                                    <td class="px-5 py-2 text-slate-500">Unique, auto-lowercased</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-primary-300 text-xs">password</td>
+                                    <td class="px-5 py-2">string</td>
+                                    <td class="px-5 py-2 text-slate-500">Bcrypt hashed</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-primary-300 text-xs">phone</td>
+                                    <td class="px-5 py-2">string?</td>
+                                    <td class="px-5 py-2 text-slate-500">Nullable</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-primary-300 text-xs">languages</td>
+                                    <td class="px-5 py-2">JSON[]</td>
+                                    <td class="px-5 py-2 text-slate-500">Array of language strings</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-primary-300 text-xs">avatar</td>
+                                    <td class="px-5 py-2">string?</td>
+                                    <td class="px-5 py-2 text-slate-500">URL or path</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-primary-300 text-xs">createdAt / updatedAt</td>
+                                    <td class="px-5 py-2">DateTime</td>
+                                    <td class="px-5 py-2 text-slate-500">Auto-managed (Timestampable)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Professional -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                    <div class="flex items-center gap-3 px-5 py-3 bg-slate-800/60 border-b border-slate-700/50">
+                        <span
+                            class="px-2 py-0.5 rounded bg-emerald-700/40 text-emerald-300 text-xs font-mono">professionals</span>
+                        <h3 class="font-semibold text-white text-sm">Professional</h3>
+                        <span class="ml-auto text-xs text-slate-500">role = "professional" (fixed) · OneToMany →
+                            Service</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="text-left border-b border-slate-800">
+                                    <th class="px-5 py-2 text-slate-500 font-medium">Field</th>
+                                    <th class="px-5 py-2 text-slate-500 font-medium">Type</th>
+                                    <th class="px-5 py-2 text-slate-500 font-medium">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/50 text-slate-300">
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-emerald-300 text-xs">id, firstName, lastName,
+                                        username, email, password, phone, languages, avatar, createdAt, updatedAt</td>
+                                    <td class="px-5 py-2">—</td>
+                                    <td class="px-5 py-2 text-slate-500">Same as User</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-emerald-300 text-xs">job</td>
+                                    <td class="px-5 py-2">string</td>
+                                    <td class="px-5 py-2 text-slate-500">Required profession title</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-emerald-300 text-xs">businessName</td>
+                                    <td class="px-5 py-2">string?</td>
+                                    <td class="px-5 py-2 text-slate-500">Nullable</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-emerald-300 text-xs">description</td>
+                                    <td class="px-5 py-2">string?</td>
+                                    <td class="px-5 py-2 text-slate-500">Bio/description</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-emerald-300 text-xs">services</td>
+                                    <td class="px-5 py-2">Service[]</td>
+                                    <td class="px-5 py-2 text-slate-500">cascade persist/remove, orphanRemoval</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Service -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                    <div class="flex items-center gap-3 px-5 py-3 bg-slate-800/60 border-b border-slate-700/50">
+                        <span
+                            class="px-2 py-0.5 rounded bg-amber-700/40 text-amber-300 text-xs font-mono">services</span>
+                        <h3 class="font-semibold text-white text-sm">Service</h3>
+                        <span class="ml-auto text-xs text-slate-500">ManyToOne → Professional (CASCADE DELETE)</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="text-left border-b border-slate-800">
+                                    <th class="px-5 py-2 text-slate-500 font-medium">Field</th>
+                                    <th class="px-5 py-2 text-slate-500 font-medium">Type</th>
+                                    <th class="px-5 py-2 text-slate-500 font-medium">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/50 text-slate-300">
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-amber-300 text-xs">id</td>
+                                    <td class="px-5 py-2">int</td>
+                                    <td class="px-5 py-2 text-slate-500">PK</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-amber-300 text-xs">name</td>
+                                    <td class="px-5 py-2">string</td>
+                                    <td class="px-5 py-2 text-slate-500">Required</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-amber-300 text-xs">description</td>
+                                    <td class="px-5 py-2">string?</td>
+                                    <td class="px-5 py-2 text-slate-500"></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-amber-300 text-xs">cost</td>
+                                    <td class="px-5 py-2">decimal(10,2)</td>
+                                    <td class="px-5 py-2 text-slate-500">Price</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-amber-300 text-xs">duration</td>
+                                    <td class="px-5 py-2">int?</td>
+                                    <td class="px-5 py-2 text-slate-500">Minutes</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-amber-300 text-xs">languages</td>
+                                    <td class="px-5 py-2">JSON[]</td>
+                                    <td class="px-5 py-2 text-slate-500">Languages supported for this service</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-amber-300 text-xs">professional</td>
+                                    <td class="px-5 py-2">Professional</td>
+                                    <td class="px-5 py-2 text-slate-500">Owner FK</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Appointment -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                    <div class="flex items-center gap-3 px-5 py-3 bg-slate-800/60 border-b border-slate-700/50">
+                        <span
+                            class="px-2 py-0.5 rounded bg-purple-700/40 text-purple-300 text-xs font-mono">appointments</span>
+                        <h3 class="font-semibold text-white text-sm">Appointment</h3>
+                        <span class="ml-auto text-xs text-slate-500">Central entity — links User, Professional, Service,
+                            Message</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="text-left border-b border-slate-800">
+                                    <th class="px-5 py-2 text-slate-500 font-medium">Field</th>
+                                    <th class="px-5 py-2 text-slate-500 font-medium">Type</th>
+                                    <th class="px-5 py-2 text-slate-500 font-medium">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/50 text-slate-300">
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-purple-300 text-xs">id</td>
+                                    <td class="px-5 py-2">int</td>
+                                    <td class="px-5 py-2 text-slate-500">PK</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-purple-300 text-xs">serviceName</td>
+                                    <td class="px-5 py-2">string</td>
+                                    <td class="px-5 py-2 text-slate-500">Snapshot at booking time (not FK)</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-purple-300 text-xs">date</td>
+                                    <td class="px-5 py-2">DateTime</td>
+                                    <td class="px-5 py-2 text-slate-500">Appointment date/time, indexed</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-purple-300 text-xs">status</td>
+                                    <td class="px-5 py-2">enum</td>
+                                    <td class="px-5 py-2 text-slate-500">pending | confirmed | cancelled | completed
+                                        (default: pending)</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-purple-300 text-xs">notes</td>
+                                    <td class="px-5 py-2">string?</td>
+                                    <td class="px-5 py-2 text-slate-500">Client notes</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-purple-300 text-xs">professional</td>
+                                    <td class="px-5 py-2">Professional</td>
+                                    <td class="px-5 py-2 text-slate-500">FK, indexed with user_id</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-purple-300 text-xs">user</td>
+                                    <td class="px-5 py-2">User</td>
+                                    <td class="px-5 py-2 text-slate-500">FK, indexed with professional_id</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-purple-300 text-xs">service</td>
+                                    <td class="px-5 py-2">Service?</td>
+                                    <td class="px-5 py-2 text-slate-500">FK nullable, SET NULL on delete</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-purple-300 text-xs">messages</td>
+                                    <td class="px-5 py-2">Message[]</td>
+                                    <td class="px-5 py-2 text-slate-500">Ordered by createdAt ASC, cascade remove</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Message -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                    <div class="flex items-center gap-3 px-5 py-3 bg-slate-800/60 border-b border-slate-700/50">
+                        <span class="px-2 py-0.5 rounded bg-rose-700/40 text-rose-300 text-xs font-mono">messages</span>
+                        <h3 class="font-semibold text-white text-sm">Message</h3>
+                        <span class="ml-auto text-xs text-slate-500">Always scoped to an Appointment (no standalone
+                            messages)</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="text-left border-b border-slate-800">
+                                    <th class="px-5 py-2 text-slate-500 font-medium">Field</th>
+                                    <th class="px-5 py-2 text-slate-500 font-medium">Type</th>
+                                    <th class="px-5 py-2 text-slate-500 font-medium">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/50 text-slate-300">
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-rose-300 text-xs">id</td>
+                                    <td class="px-5 py-2">int</td>
+                                    <td class="px-5 py-2 text-slate-500">PK</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-rose-300 text-xs">senderRole</td>
+                                    <td class="px-5 py-2">enum</td>
+                                    <td class="px-5 py-2 text-slate-500">"user" | "professional"</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-rose-300 text-xs">recipientRole</td>
+                                    <td class="px-5 py-2">enum</td>
+                                    <td class="px-5 py-2 text-slate-500">"user" | "professional"</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-rose-300 text-xs">content</td>
+                                    <td class="px-5 py-2">text</td>
+                                    <td class="px-5 py-2 text-slate-500">Max 5000 chars</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-rose-300 text-xs">isRead</td>
+                                    <td class="px-5 py-2">bool</td>
+                                    <td class="px-5 py-2 text-slate-500">Default false</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-rose-300 text-xs">senderUser /
+                                        senderProfessional</td>
+                                    <td class="px-5 py-2">User? | Professional?</td>
+                                    <td class="px-5 py-2 text-slate-500">Nullable FK, SET NULL on delete</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-rose-300 text-xs">recipientUser /
+                                        recipientProfessional</td>
+                                    <td class="px-5 py-2">User? | Professional?</td>
+                                    <td class="px-5 py-2 text-slate-500">Nullable FK, SET NULL on delete</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-rose-300 text-xs">appointment</td>
+                                    <td class="px-5 py-2">Appointment?</td>
+                                    <td class="px-5 py-2 text-slate-500">Required in practice (enforced by resolver)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-5 py-2 font-mono text-rose-300 text-xs">createdAt</td>
+                                    <td class="px-5 py-2">DateTime</td>
+                                    <td class="px-5 py-2 text-slate-500">Indexed with recipient_id columns</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ─── GraphQL Schema ─── -->
+        <section id="graphql">
+            <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                <span
+                    class="w-7 h-7 rounded-lg bg-primary-600 flex items-center justify-center text-white text-xs font-bold">05</span>
+                GraphQL Schema
+            </h2>
+
+            <div class="mb-4 bg-slate-900 border border-slate-800 rounded-xl p-4 text-sm text-slate-400">
+                <strong class="text-white">Endpoint:</strong> <code
+                    class="bg-slate-800 px-2 py-0.5 rounded text-primary-300">GET|POST /graphql</code> &nbsp;·&nbsp;
+                <strong class="text-white">Schema:</strong> Hand-built in PHP via <code
+                    class="bg-slate-800 px-1 rounded text-xs">SchemaBuilder</code> + <code
+                    class="bg-slate-800 px-1 rounded text-xs">TypeRegistry</code> &nbsp;·&nbsp;
+                <strong class="text-white">Auth:</strong> Resolver-level (not firewall)
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- Queries -->
+                <div>
+                    <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Queries</h3>
+                    <div class="space-y-2">
+                        <!-- Auth badges legend -->
+                        <div class="flex gap-2 text-xs mb-3">
+                            <span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300">Public</span>
+                            <span class="px-2 py-0.5 rounded bg-blue-900/60 text-blue-300">Auth required</span>
+                            <span class="px-2 py-0.5 rounded bg-green-900/60 text-green-300">User only</span>
+                            <span class="px-2 py-0.5 rounded bg-amber-900/60 text-amber-300">Professional only</span>
+                            <span class="px-2 py-0.5 rounded bg-red-900/60 text-red-300">Admin only</span>
+                        </div>
+
+                        <div class="grid gap-1.5 text-xs font-mono">
+                            <div
+                                class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                                <span class="text-primary-300">professionals</span><span
+                                    class="text-slate-500 flex-1">language?, search?, page?, limit?</span><span
+                                    class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 font-sans">Public</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                                <span class="text-primary-300">professional</span><span
+                                    class="text-slate-500 flex-1">id!</span><span
+                                    class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 font-sans">Public</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                                <span class="text-brand-300">professionalLanguages</span><span
+                                    class="text-slate-500 flex-1">—</span><span
+                                    class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 font-sans">Public</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                                <span class="text-brand-300">me</span><span class="text-slate-500 flex-1">— (returns
+                                    User|Professional|Admin)</span><span
+                                    class="px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 font-sans">Auth</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                                <span class="text-brand-300">myUserProfile</span><span
+                                    class="text-slate-500 flex-1">—</span><span
+                                    class="px-2 py-0.5 rounded bg-green-900/60 text-green-300 font-sans">User</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                                <span class="text-brand-300">myProfessionalProfile</span><span
+                                    class="text-slate-500 flex-1">—</span><span
+                                    class="px-2 py-0.5 rounded bg-amber-900/60 text-amber-300 font-sans">Professional</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                                <span class="text-brand-300">myAppointments</span><span
+                                    class="text-slate-500 flex-1">page?, limit?</span><span
+                                    class="px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 font-sans">Auth</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                                <span class="text-brand-300">appointment</span><span
+                                    class="text-slate-500 flex-1">id!</span><span
+                                    class="px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 font-sans">Auth</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                                <span class="text-brand-300">myConversations</span><span
+                                    class="text-slate-500 flex-1">—</span><span
+                                    class="px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 font-sans">Auth</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                                <span class="text-brand-300">thread</span><span
+                                    class="text-slate-500 flex-1">contactId!</span><span
+                                    class="px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 font-sans">Auth</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                                <span class="text-brand-300">adminUsers / adminProfessionals / adminAdmins /
+                                    adminAppointments / adminStats</span><span
+                                    class="text-slate-500 flex-1">paginated</span><span
+                                    class="px-2 py-0.5 rounded bg-red-900/60 text-red-300 font-sans">Admin</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mutations -->
+                <div>
+                    <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Mutations</h3>
+                    <div class="space-y-1.5 text-xs font-mono">
+                        <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                            <span class="text-emerald-300">login</span><span class="text-slate-500 flex-1">email!,
+                                password!, role?</span><span
+                                class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 font-sans">Public</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                            <span class="text-emerald-300">registerUser</span><span
+                                class="text-slate-500 flex-1">RegisterUserInput!</span><span
+                                class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 font-sans">Public</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                            <span class="text-emerald-300">registerProfessional</span><span
+                                class="text-slate-500 flex-1">RegisterProfessionalInput!</span><span
+                                class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 font-sans">Public</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                            <span class="text-emerald-300">createAdmin</span><span
+                                class="text-slate-500 flex-1">CreateAdminInput!</span><span
+                                class="px-2 py-0.5 rounded bg-red-900/60 text-red-300 font-sans">Admin</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                            <span class="text-emerald-300">updateUserProfile</span><span
+                                class="text-slate-500 flex-1">UpdateUserInput!</span><span
+                                class="px-2 py-0.5 rounded bg-green-900/60 text-green-300 font-sans">User</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                            <span class="text-emerald-300">updateProfessionalProfile</span><span
+                                class="text-slate-500 flex-1">UpdateProfessionalInput!</span><span
+                                class="px-2 py-0.5 rounded bg-amber-900/60 text-amber-300 font-sans">Professional</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                            <span class="text-emerald-300">addService / updateService / deleteService</span><span
+                                class="text-slate-500 flex-1">ServiceInput!</span><span
+                                class="px-2 py-0.5 rounded bg-amber-900/60 text-amber-300 font-sans">Professional</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                            <span class="text-emerald-300">createAppointment</span><span
+                                class="text-slate-500 flex-1">CreateAppointmentInput!</span><span
+                                class="px-2 py-0.5 rounded bg-green-900/60 text-green-300 font-sans">User</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                            <span class="text-emerald-300">updateAppointmentStatus</span><span
+                                class="text-slate-500 flex-1">id!, status!</span><span
+                                class="px-2 py-0.5 rounded bg-amber-900/60 text-amber-300 font-sans">Professional/Admin</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                            <span class="text-emerald-300">sendMessage</span><span
+                                class="text-slate-500 flex-1">appointmentId!, content!</span><span
+                                class="px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 font-sans">Auth</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2">
+                            <span class="text-emerald-300">markMessageRead</span><span
+                                class="text-slate-500 flex-1">id!</span><span
+                                class="px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 font-sans">Auth
+                                (recipient)</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ─── Frontend ─── -->
+        <section id="frontend">
+            <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                <span
+                    class="w-7 h-7 rounded-lg bg-brand-600 flex items-center justify-center text-white text-xs font-bold">06</span>
+                Frontend Architecture
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Component hierarchy -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Atomic Design
+                        Hierarchy</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-start gap-3">
+                            <span
+                                class="px-2 py-0.5 rounded bg-blue-900/50 text-blue-300 text-xs font-medium mt-0.5 shrink-0">Atoms</span>
+                            <span class="text-slate-400">Button, Input, Badge, Avatar, Spinner, Label,
+                                ErrorMessage…</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span
+                                class="px-2 py-0.5 rounded bg-purple-900/50 text-purple-300 text-xs font-medium mt-0.5 shrink-0">Molecules</span>
+                            <span class="text-slate-400">FormField, SearchBar, AppointmentCard, MessageItem,
+                                ServiceCard, ProfessionalCard…</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span
+                                class="px-2 py-0.5 rounded bg-amber-900/50 text-amber-300 text-xs font-medium mt-0.5 shrink-0">Organisms</span>
+                            <span class="text-slate-400">LoginForm, RegisterForm, AppointmentList, MessageThread,
+                                ServicesManager, ProfessionalGrid…</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span
+                                class="px-2 py-0.5 rounded bg-emerald-900/50 text-emerald-300 text-xs font-medium mt-0.5 shrink-0">Pages</span>
+                            <span class="text-slate-400">Full page components composed from organisms</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span
+                                class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs font-medium mt-0.5 shrink-0">Layouts</span>
+                            <span class="text-slate-400">PublicLayout · PrivateLayout · AdminLayout</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- State management -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">State & Data
+                        Management</h3>
+                    <div class="space-y-3 text-sm text-slate-300">
+                        <div class="flex gap-3"><span class="text-brand-400 shrink-0 mt-0.5">▸</span><span><strong
+                                    class="text-white">AuthContext</strong> — React Context holding <code
+                                    class="bg-slate-800 px-1 rounded text-xs">{ token, role, email }</code>. Seeded from
+                                localStorage on app init.</span></div>
+                        <div class="flex gap-3"><span class="text-brand-400 shrink-0 mt-0.5">▸</span><span><strong
+                                    class="text-white">Apollo InMemoryCache</strong> — All remote data is cached.
+                                Default policy: <code class="bg-slate-800 px-1 rounded text-xs">cache-and-network</code>
+                                (shows cached immediately, refetches in background).</span></div>
+                        <div class="flex gap-3"><span class="text-brand-400 shrink-0 mt-0.5">▸</span><span><strong
+                                    class="text-white">react-hook-form + Zod</strong> — All forms. Validation schemas
+                                co-located with form components.</span></div>
+                        <div class="flex gap-3"><span class="text-brand-400 shrink-0 mt-0.5">▸</span><span><strong
+                                    class="text-white">No global state library</strong> (Redux/Zustand). Apollo handles
+                                server state, React Context handles auth.</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── Routes ─── -->
+        <section id="routes">
+            <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                <span
+                    class="w-7 h-7 rounded-lg bg-brand-600 flex items-center justify-center text-white text-xs font-bold">07</span>
+                Frontend Routes
+            </h2>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-left border-b border-slate-800 bg-slate-800/50">
+                            <th class="px-5 py-3 text-slate-400 font-medium">Path</th>
+                            <th class="px-5 py-3 text-slate-400 font-medium">Page</th>
+                            <th class="px-5 py-3 text-slate-400 font-medium">Layout</th>
+                            <th class="px-5 py-3 text-slate-400 font-medium">Access</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/50 text-slate-300">
+                        <tr>
+                            <td class="px-5 py-2.5 font-mono text-brand-300 text-xs">/</td>
+                            <td class="px-5 py-2.5">HomePage</td>
+                            <td class="px-5 py-2.5 text-slate-500">PublicLayout</td>
+                            <td class="px-5 py-2.5"><span
+                                    class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">Public</span></td>
+                        </tr>
+                        <tr>
+                            <td class="px-5 py-2.5 font-mono text-brand-300 text-xs">/professionals</td>
+                            <td class="px-5 py-2.5">ProfessionalsPage</td>
+                            <td class="px-5 py-2.5 text-slate-500">PublicLayout</td>
+                            <td class="px-5 py-2.5"><span
+                                    class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">Public</span></td>
+                        </tr>
+                        <tr>
+                            <td class="px-5 py-2.5 font-mono text-brand-300 text-xs">/professionals/:id</td>
+                            <td class="px-5 py-2.5">ProfessionalDetailPage</td>
+                            <td class="px-5 py-2.5 text-slate-500">PublicLayout</td>
+                            <td class="px-5 py-2.5"><span
+                                    class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">Public</span></td>
+                        </tr>
+                        <tr>
+                            <td class="px-5 py-2.5 font-mono text-brand-300 text-xs">/login</td>
+                            <td class="px-5 py-2.5">LoginPage</td>
+                            <td class="px-5 py-2.5 text-slate-500">PublicLayout</td>
+                            <td class="px-5 py-2.5"><span
+                                    class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">Public</span> <span
+                                    class="text-slate-500 text-xs">(redirects if authed)</span></td>
+                        </tr>
+                        <tr>
+                            <td class="px-5 py-2.5 font-mono text-brand-300 text-xs">/register</td>
+                            <td class="px-5 py-2.5">RegisterPage</td>
+                            <td class="px-5 py-2.5 text-slate-500">PublicLayout</td>
+                            <td class="px-5 py-2.5"><span
+                                    class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">Public</span> <span
+                                    class="text-slate-500 text-xs">(redirects if authed)</span></td>
+                        </tr>
+                        <tr>
+                            <td class="px-5 py-2.5 font-mono text-brand-300 text-xs">/dashboard</td>
+                            <td class="px-5 py-2.5">DashboardPage</td>
+                            <td class="px-5 py-2.5 text-slate-500">PrivateLayout</td>
+                            <td class="px-5 py-2.5"><span
+                                    class="px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 text-xs">Auth</span></td>
+                        </tr>
+                        <tr>
+                            <td class="px-5 py-2.5 font-mono text-brand-300 text-xs">/appointments</td>
+                            <td class="px-5 py-2.5">AppointmentsPage</td>
+                            <td class="px-5 py-2.5 text-slate-500">PrivateLayout</td>
+                            <td class="px-5 py-2.5"><span
+                                    class="px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 text-xs">Auth</span></td>
+                        </tr>
+                        <tr>
+                            <td class="px-5 py-2.5 font-mono text-brand-300 text-xs">/appointments/:id</td>
+                            <td class="px-5 py-2.5">AppointmentDetailPage</td>
+                            <td class="px-5 py-2.5 text-slate-500">PrivateLayout</td>
+                            <td class="px-5 py-2.5"><span
+                                    class="px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 text-xs">Auth</span></td>
+                        </tr>
+                        <tr>
+                            <td class="px-5 py-2.5 font-mono text-brand-300 text-xs">/messages</td>
+                            <td class="px-5 py-2.5">MessagesPage</td>
+                            <td class="px-5 py-2.5 text-slate-500">PrivateLayout</td>
+                            <td class="px-5 py-2.5"><span
+                                    class="px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 text-xs">Auth</span></td>
+                        </tr>
+                        <tr>
+                            <td class="px-5 py-2.5 font-mono text-brand-300 text-xs">/profile</td>
+                            <td class="px-5 py-2.5">ProfilePage</td>
+                            <td class="px-5 py-2.5 text-slate-500">PrivateLayout</td>
+                            <td class="px-5 py-2.5"><span
+                                    class="px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 text-xs">Auth</span></td>
+                        </tr>
+                        <tr>
+                            <td class="px-5 py-2.5 font-mono text-brand-300 text-xs">/services</td>
+                            <td class="px-5 py-2.5">ServicesPage</td>
+                            <td class="px-5 py-2.5 text-slate-500">PrivateLayout</td>
+                            <td class="px-5 py-2.5"><span
+                                    class="px-2 py-0.5 rounded bg-amber-900/60 text-amber-300 text-xs">Professional
+                                    only</span></td>
+                        </tr>
+                        <tr>
+                            <td class="px-5 py-2.5 font-mono text-brand-300 text-xs">/admin</td>
+                            <td class="px-5 py-2.5">AdminDashboardPage</td>
+                            <td class="px-5 py-2.5 text-slate-500">AdminLayout</td>
+                            <td class="px-5 py-2.5"><span
+                                    class="px-2 py-0.5 rounded bg-red-900/60 text-red-300 text-xs">Admin only</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-xs text-slate-500 mt-3">Route guards implemented via <code
+                    class="bg-slate-800 px-1 rounded">ProtectedRoute</code> wrapper. Unauthenticated → redirect to <code
+                    class="bg-slate-800 px-1 rounded">/login</code>. Wrong role → redirect to <code
+                    class="bg-slate-800 px-1 rounded">/dashboard</code>.</p>
+        </section>
+
+        <!-- ─── Security ─── -->
+        <section id="security">
+            <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                <span
+                    class="w-7 h-7 rounded-lg bg-brand-600 flex items-center justify-center text-white text-xs font-bold">08</span>
+                Security Notes
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="bg-slate-900 border border-emerald-800/30 rounded-xl p-5">
+                    <h3 class="text-sm font-semibold text-emerald-400 mb-3">✓ What's in place</h3>
+                    <ul class="space-y-1.5 text-sm text-slate-300">
+                        <li class="flex gap-2"><span class="text-emerald-500 shrink-0">✓</span>RS256 asymmetric JWT
+                            signing (harder to forge than HS256)</li>
+                        <li class="flex gap-2"><span class="text-emerald-500 shrink-0">✓</span>Resolver-level
+                            authorization (each resolver checks current user role)</li>
+                        <li class="flex gap-2"><span class="text-emerald-500 shrink-0">✓</span>Ownership checks (users
+                            can only access their own data)</li>
+                        <li class="flex gap-2"><span class="text-emerald-500 shrink-0">✓</span>Password hashing
+                            (Symfony's password hasher)</li>
+                        <li class="flex gap-2"><span class="text-emerald-500 shrink-0">✓</span>CORS configured via
+                            nelmio/cors-bundle</li>
+                        <li class="flex gap-2"><span class="text-emerald-500 shrink-0">✓</span>Auto-logout on 401/403 in
+                            Apollo errorLink</li>
+                        <li class="flex gap-2"><span class="text-emerald-500 shrink-0">✓</span>Message content limited
+                            to 5000 chars</li>
+                        <li class="flex gap-2"><span class="text-emerald-500 shrink-0">✓</span>ILIKE search (not raw
+                            injection) via Doctrine native queries</li>
+                    </ul>
+                </div>
+
+                <div class="bg-slate-900 border border-red-800/30 rounded-xl p-5">
+                    <h3 class="text-sm font-semibold text-red-400 mb-3">⚠ Areas to improve</h3>
+                    <ul class="space-y-1.5 text-sm text-slate-300">
+                        <li class="flex gap-2"><span class="text-red-400 shrink-0">!</span>JWT stored in <code
+                                class="bg-slate-800 px-1 rounded text-xs">localStorage</code> — XSS-vulnerable. Prefer
+                            HttpOnly cookie.</li>
+                        <li class="flex gap-2"><span class="text-red-400 shrink-0">!</span>No token refresh mechanism —
+                            tokens expire after 1h with no silent refresh.</li>
+                        <li class="flex gap-2"><span class="text-red-400 shrink-0">!</span>No rate limiting on
+                            login/register mutations.</li>
+                        <li class="flex gap-2"><span class="text-red-400 shrink-0">!</span>No GraphQL depth/complexity
+                            limiting (DoS via deeply nested queries).</li>
+                        <li class="flex gap-2"><span class="text-red-400 shrink-0">!</span>No file upload validation
+                            (avatar URLs are plain strings — no server-side check).</li>
+                        <li class="flex gap-2"><span class="text-red-400 shrink-0">!</span>No CSP headers configured on
+                            Symfony responses.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── Key Flows ─── -->
+        <section id="flows">
+            <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                <span
+                    class="w-7 h-7 rounded-lg bg-brand-600 flex items-center justify-center text-white text-xs font-bold">09</span>
+                Key Application Flows
+            </h2>
+
+            <div class="space-y-4">
+
+                <!-- Login flow -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <h3 class="font-semibold text-white text-sm mb-4">Login Flow</h3>
+                    <div class="flex flex-wrap items-center gap-2 text-xs">
+                        <div class="px-3 py-1.5 bg-slate-800 rounded text-slate-200">User enters email + password</div>
+                        <span class="text-slate-600">→</span>
+                        <div class="px-3 py-1.5 bg-slate-800 rounded text-slate-200"><code>LOGIN</code> mutation</div>
+                        <span class="text-slate-600">→</span>
+                        <div class="px-3 py-1.5 bg-slate-800 rounded text-slate-200">AuthResolver tries
+                            Admin→Professional→User</div>
+                        <span class="text-slate-600">→</span>
+                        <div class="px-3 py-1.5 bg-slate-800 rounded text-slate-200">Returns
+                            <code>{ token, role, email }</code>
+                        </div>
+                        <span class="text-slate-600">→</span>
+                        <div
+                            class="px-3 py-1.5 bg-emerald-900/50 border border-emerald-700/30 rounded text-emerald-200">
+                            Stored in localStorage + AuthContext</div>
+                        <span class="text-slate-600">→</span>
+                        <div class="px-3 py-1.5 bg-slate-800 rounded text-slate-200">Redirect to /dashboard</div>
+                    </div>
+                </div>
+
+                <!-- Book appointment flow -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <h3 class="font-semibold text-white text-sm mb-4">Book an Appointment (User)</h3>
+                    <div class="flex flex-wrap items-center gap-2 text-xs">
+                        <div class="px-3 py-1.5 bg-slate-800 rounded text-slate-200">Browse /professionals</div>
+                        <span class="text-slate-600">→</span>
+                        <div class="px-3 py-1.5 bg-slate-800 rounded text-slate-200">View /professionals/:id</div>
+                        <span class="text-slate-600">→</span>
+                        <div class="px-3 py-1.5 bg-slate-800 rounded text-slate-200">Select service + date</div>
+                        <span class="text-slate-600">→</span>
+                        <div class="px-3 py-1.5 bg-slate-800 rounded text-slate-200"><code>createAppointment</code>
+                            mutation</div>
+                        <span class="text-slate-600">→</span>
+                        <div class="px-3 py-1.5 bg-slate-800 rounded text-slate-200">Appointment created (status:
+                            pending)</div>
+                        <span class="text-slate-600">→</span>
+                        <div
+                            class="px-3 py-1.5 bg-emerald-900/50 border border-emerald-700/30 rounded text-emerald-200">
+                            Visible in /appointments for both user and professional</div>
+                    </div>
+                </div>
+
+                <!-- Messaging flow -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <h3 class="font-semibold text-white text-sm mb-4">Messaging (Appointment-Scoped)</h3>
+                    <div class="flex flex-wrap items-center gap-2 text-xs">
+                        <div class="px-3 py-1.5 bg-slate-800 rounded text-slate-200">Open /appointments/:id</div>
+                        <span class="text-slate-600">→</span>
+                        <div class="px-3 py-1.5 bg-slate-800 rounded text-slate-200">Message thread loaded (query:
+                            <code>appointment</code>)
+                        </div>
+                        <span class="text-slate-600">→</span>
+                        <div class="px-3 py-1.5 bg-slate-800 rounded text-slate-200">User or Professional types message
+                        </div>
+                        <span class="text-slate-600">→</span>
+                        <div class="px-3 py-1.5 bg-slate-800 rounded text-slate-200">
+                            <code>sendMessage(appointmentId, content)</code>
+                        </div>
+                        <span class="text-slate-600">→</span>
+                        <div class="px-3 py-1.5 bg-slate-800 rounded text-slate-200">Resolver validates appointment
+                            ownership</div>
+                        <span class="text-slate-600">→</span>
+                        <div
+                            class="px-3 py-1.5 bg-emerald-900/50 border border-emerald-700/30 rounded text-emerald-200">
+                            Message saved + Apollo cache updated</div>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-3">Every message MUST belong to an appointment. There is no
+                        standalone inbox or direct messaging outside of appointments.</p>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 mt-20 px-8 py-8 text-center text-slate-600 text-xs">
+        <p>multi-symfony · Symfony 8 + GraphQL + React 18 · Document generated 2026</p>
+    </footer>
+
+</body>
+
+</html>

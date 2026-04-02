@@ -1,0 +1,12 @@
+framework:
+    cache:
+        # Unique name of your app: used to compute stable namespaces for cache keys.
+        prefix_seed: proconnect/app
+
+        # Use Redis as main app cache
+        app: cache.adapter.redis
+        default_redis_provider: "%env(REDIS_URL)%"
+
+        pools:
+            cache.professionals: null
+            cache.users: null
