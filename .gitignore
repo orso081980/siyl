@@ -1,13 +1,64 @@
+###> Symfony standard ignores
+# See: https://github.com/symfony/skeleton/blob/main/.gitignore
 
-###> symfony/framework-bundle ###
-/.env.local
-/.env.local.php
-/.env.*.local
-/config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
-/var/
+# Dependencies
 /vendor/
-###< symfony/framework-bundle ###
+
+# Symfony runtime
+/var/
+/public/bundles/
+/public/build/
+/public/hot
+/public/uploads/
+
+# Node/npm
+/node_modules/
+/npm-debug.log*
+/yarn-error.log*
+
+# Environment files
+/.env.local
+/.env.*.local
+/.env.test.local
+/.env
+
+# PHP Unit cache
+/.phpunit.result.cache
+
+# Build and cache
+/.cache/
+/.sass-cache/
+/build/
+
+# Logs
+*.log
+
+# IDEs and editors
+/.idea/
+.vscode/
+*.iml
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Composer auth
+/auth.json
+
+# JWT private keys
+/config/jwt/*.pem
+
+# Misc
+*.swp
+*.bak
+*~
+
+# Local secrets folder
+/secrets/
+
+###< Symfony standard ignores
 
 ###> php-cs-fixer/shim ###
 /.php-cs-fixer.php
