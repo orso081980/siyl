@@ -31,19 +31,34 @@ jobs:
                   restore-keys: composer-
 
             - name: Install Composer dependencies (no dev)
-              run: composer install --no-dev --optimize-autoloader --no-interaction
+              # --no-scripts skips the post-install-cmd (cache:clear / assets:install)
+              # which would fail because there is no .env file in CI.
+              # We handle cache warming ourselves in the next steps.
+              run: composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
             # ── 3. Symfony optimisations ──────────────────────────────────────────
+            # Create a minimal .env so dump-env prod can read it.
+            # Real secrets come from AWS SSM at Lambda runtime — these are placeholders.
+            - name: Create minimal .env for dump-env
+              run: |
+                  cat > .env <<'EOF'
+                  APP_ENV=prod
+                  APP_DEBUG=0
+                  APP_SECRET=placeholder
+                  DATABASE_URL=placeholder
+                  JWT_SECRET_KEY=/var/task/config/jwt/private.pem
+                  JWT_PUBLIC_KEY=/var/task/config/jwt/public.pem
+                  JWT_PASSPHRASE=placeholder
+                  CORS_ALLOW_ORIGIN=placeholder
+                  DEFAULT_URI=placeholder
+                  REDIS_URL=redis://localhost:6379
+                  EOF
+
             - name: Dump env for production
-              run: composer dump-env prod
-              env:
-                  # Placeholder values — real secrets come from SSM at runtime.
-                  # These are only needed so `dump-env` doesn't fail locally.
-                  APP_SECRET: placeholder
-                  DATABASE_URL: placeholder
-                  JWT_PASSPHRASE: placeholder
-                  CORS_ALLOW_ORIGIN: placeholder
-                  DEFAULT_URI: placeholder
+              run: APP_ENV=prod php bin/console dotenv:dump prod
+
+            - name: Warm cache for production
+              run: APP_ENV=prod php bin/console cache:warmup
 
             # ── 4. JWT keys (stored as GitHub Secrets, base64-encoded) ────────────
             # To add them:
