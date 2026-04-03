@@ -1,0 +1,73 @@
+name: Deploy to AWS Lambda
+
+on:
+    push:
+        branches:
+            - main # change to "master" if that is your default branch
+
+jobs:
+    deploy:
+        name: Deploy
+        runs-on: ubuntu-latest
+
+        steps:
+            # ── 1. Checkout ────────────────────────────────────────────────────────
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            # ── 2. PHP + Composer ─────────────────────────────────────────────────
+            - name: Set up PHP 8.4
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "8.4"
+                  tools: composer:v2
+                  coverage: none
+
+            - name: Cache Composer dependencies
+              uses: actions/cache@v4
+              with:
+                  path: vendor
+                  key: composer-${{ hashFiles('composer.lock') }}
+                  restore-keys: composer-
+
+            - name: Install Composer dependencies (no dev)
+              run: composer install --no-dev --optimize-autoloader --no-interaction
+
+            # ── 3. Symfony optimisations ──────────────────────────────────────────
+            - name: Dump env for production
+              run: composer dump-env prod
+              env:
+                  # Placeholder values — real secrets come from SSM at runtime.
+                  # These are only needed so `dump-env` doesn't fail locally.
+                  APP_SECRET: placeholder
+                  DATABASE_URL: placeholder
+                  JWT_PASSPHRASE: placeholder
+                  CORS_ALLOW_ORIGIN: placeholder
+                  DEFAULT_URI: placeholder
+
+            # ── 4. JWT keys (stored as GitHub Secrets, base64-encoded) ────────────
+            # To add them:
+            #   JWT_PRIVATE_KEY = base64 < config/jwt/private.pem
+            #   JWT_PUBLIC_KEY  = base64 < config/jwt/public.pem
+            - name: Restore JWT keys
+              run: |
+                  mkdir -p config/jwt
+                  echo "${{ secrets.JWT_PRIVATE_KEY }}" | base64 --decode > config/jwt/private.pem
+                  echo "${{ secrets.JWT_PUBLIC_KEY }}"  | base64 --decode > config/jwt/public.pem
+
+            # ── 5. Node + Serverless Framework ────────────────────────────────────
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+
+            - name: Install Serverless Framework
+              run: npm install -g serverless
+
+            # ── 6. Deploy ─────────────────────────────────────────────────────────
+            - name: Deploy to AWS Lambda
+              run: serverless deploy --verbose
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  AWS_DEFAULT_REGION: eu-west-1

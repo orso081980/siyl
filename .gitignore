@@ -21,7 +21,7 @@
 /.env.*.local
 /.env.test.local
 /.env
-
+.env
 # PHP Unit cache
 /.phpunit.result.cache
 

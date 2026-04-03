@@ -1,0 +1,497 @@
+{
+  "service": {
+    "service": "multi-symfony-api",
+    "serviceObject": {
+      "name": "multi-symfony-api"
+    },
+    "provider": {
+      "name": "aws",
+      "region": "eu-west-1",
+      "runtime": "provided.al2023",
+      "environment": {
+        "APP_ENV": "prod",
+        "APP_DEBUG": "0",
+        "APP_SECRET": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
+        "DATABASE_URL": "postgresql://neondb_owner:npg_5JiQjbH3vkUR@ep-orange-hat-ab6cz7tz.eu-west-2.aws.neon.tech/neondb?sslmode=require",
+        "JWT_SECRET_KEY": "/var/task/config/jwt/private.pem",
+        "JWT_PUBLIC_KEY": "/var/task/config/jwt/public.pem",
+        "JWT_PASSPHRASE": "a7cc89afc1e944cf94a1115a78d4324f72803be338a0fe8a1421ccf6b9dd5bb4",
+        "CORS_ALLOW_ORIGIN": ".*",
+        "DEFAULT_URI": "https://tcfh74v374.execute-api.eu-west-1.amazonaws.com",
+        "REDIS_URL": "redis://localhost:6379"
+      },
+      "stage": "dev",
+      "versionFunctions": true,
+      "deploymentMethod": "direct",
+      "compiledCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "WebLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/multi-symfony-api-dev-web"
+            }
+          },
+          "ConsoleLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/multi-symfony-api-dev-console"
+            }
+          },
+          "IamRoleLambdaExecution": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": [
+                        "lambda.amazonaws.com"
+                      ]
+                    },
+                    "Action": [
+                      "sts:AssumeRole"
+                    ]
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": {
+                    "Fn::Join": [
+                      "-",
+                      [
+                        "multi-symfony-api",
+                        "dev",
+                        "lambda"
+                      ]
+                    ]
+                  },
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:CreateLogStream",
+                          "logs:CreateLogGroup",
+                          "logs:TagResource"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/multi-symfony-api-dev*:*"
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:PutLogEvents"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/multi-symfony-api-dev*:*:*"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ],
+              "Path": "/",
+              "RoleName": {
+                "Fn::Join": [
+                  "-",
+                  [
+                    "multi-symfony-api",
+                    "dev",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    "lambdaRole"
+                  ]
+                ]
+              }
+            }
+          },
+          "WebLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": "serverless-framework-deployments-eu-west-1-9f8a3f26-6392",
+                "S3Key": "serverless/multi-symfony-api/dev/1775175396763-2026-04-03T00:16:36.763Z/multi-symfony-api.zip"
+              },
+              "Handler": "public/index.php",
+              "Runtime": "provided.al2023",
+              "FunctionName": "multi-symfony-api-dev-web",
+              "MemorySize": 512,
+              "Timeout": 28,
+              "Environment": {
+                "Variables": {
+                  "APP_ENV": "prod",
+                  "APP_DEBUG": "0",
+                  "APP_SECRET": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
+                  "DATABASE_URL": "postgresql://neondb_owner:npg_5JiQjbH3vkUR@ep-orange-hat-ab6cz7tz.eu-west-2.aws.neon.tech/neondb?sslmode=require",
+                  "JWT_SECRET_KEY": "/var/task/config/jwt/private.pem",
+                  "JWT_PUBLIC_KEY": "/var/task/config/jwt/public.pem",
+                  "JWT_PASSPHRASE": "a7cc89afc1e944cf94a1115a78d4324f72803be338a0fe8a1421ccf6b9dd5bb4",
+                  "CORS_ALLOW_ORIGIN": ".*",
+                  "DEFAULT_URI": "https://tcfh74v374.execute-api.eu-west-1.amazonaws.com",
+                  "REDIS_URL": "redis://localhost:6379",
+                  "BREF_RUNTIME": "Bref\\FpmRuntime\\Main"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Layers": [
+                "arn:aws:lambda:eu-west-1:873528684822:layer:php-84:16"
+              ]
+            },
+            "DependsOn": [
+              "WebLogGroup"
+            ]
+          },
+          "ConsoleLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": "serverless-framework-deployments-eu-west-1-9f8a3f26-6392",
+                "S3Key": "serverless/multi-symfony-api/dev/1775175396763-2026-04-03T00:16:36.763Z/multi-symfony-api.zip"
+              },
+              "Handler": "bin/console",
+              "Runtime": "provided.al2023",
+              "FunctionName": "multi-symfony-api-dev-console",
+              "MemorySize": 1024,
+              "Timeout": 120,
+              "Environment": {
+                "Variables": {
+                  "APP_ENV": "prod",
+                  "APP_DEBUG": "0",
+                  "APP_SECRET": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
+                  "DATABASE_URL": "postgresql://neondb_owner:npg_5JiQjbH3vkUR@ep-orange-hat-ab6cz7tz.eu-west-2.aws.neon.tech/neondb?sslmode=require",
+                  "JWT_SECRET_KEY": "/var/task/config/jwt/private.pem",
+                  "JWT_PUBLIC_KEY": "/var/task/config/jwt/public.pem",
+                  "JWT_PASSPHRASE": "a7cc89afc1e944cf94a1115a78d4324f72803be338a0fe8a1421ccf6b9dd5bb4",
+                  "CORS_ALLOW_ORIGIN": ".*",
+                  "DEFAULT_URI": "https://tcfh74v374.execute-api.eu-west-1.amazonaws.com",
+                  "REDIS_URL": "redis://localhost:6379",
+                  "BREF_RUNTIME": "Bref\\ConsoleRuntime\\Main"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Layers": [
+                "arn:aws:lambda:eu-west-1:873528684822:layer:php-84:16"
+              ]
+            },
+            "DependsOn": [
+              "ConsoleLogGroup"
+            ]
+          },
+          "WebLambdaVersion4AR5WbkBWRMTAU5CS6Aqox9qlpOTiQZE9J1xg5ooQ": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "WebLambdaFunction"
+              },
+              "CodeSha256": "h4ohX0wDkC3U+/Zj24ivkS3oAGGrB3AQbg78o6aLxl4="
+            }
+          },
+          "ConsoleLambdaVersion7wyWG5dVpZYByPQzrjKWm0BBlJKmPHNp7OvftnJjBs": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "ConsoleLambdaFunction"
+              },
+              "CodeSha256": "h4ohX0wDkC3U+/Zj24ivkS3oAGGrB3AQbg78o6aLxl4="
+            }
+          },
+          "HttpApi": {
+            "Type": "AWS::ApiGatewayV2::Api",
+            "Properties": {
+              "Name": "dev-multi-symfony-api",
+              "ProtocolType": "HTTP"
+            }
+          },
+          "HttpApiStage": {
+            "Type": "AWS::ApiGatewayV2::Stage",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "StageName": "$default",
+              "AutoDeploy": true,
+              "DefaultRouteSettings": {
+                "DetailedMetricsEnabled": false
+              }
+            }
+          },
+          "WebLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "WebLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationWeb": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"WebLambdaPermissionHttpApi\"][\"Properties\"][\"FunctionName\"]"
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 30000
+            }
+          },
+          "HttpApiRouteAnyProxyVar": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "ANY /{proxy+}",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationWeb"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationWeb"
+          },
+          "HttpApiRouteAny": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "ANY /",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationWeb"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationWeb"
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": "serverless-framework-deployments-eu-west-1-9f8a3f26-6392",
+            "Export": {
+              "Name": "sls-multi-symfony-api-dev-ServerlessDeploymentBucketName"
+            }
+          },
+          "WebLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "WebLambdaVersion4AR5WbkBWRMTAU5CS6Aqox9qlpOTiQZE9J1xg5ooQ"
+            },
+            "Export": {
+              "Name": "sls-multi-symfony-api-dev-WebLambdaFunctionQualifiedArn"
+            }
+          },
+          "ConsoleLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "ConsoleLambdaVersion7wyWG5dVpZYByPQzrjKWm0BBlJKmPHNp7OvftnJjBs"
+            },
+            "Export": {
+              "Name": "sls-multi-symfony-api-dev-ConsoleLambdaFunctionQualifiedArn"
+            }
+          },
+          "HttpApiId": {
+            "Description": "Id of the HTTP API",
+            "Value": {
+              "Ref": "HttpApi"
+            },
+            "Export": {
+              "Name": "sls-multi-symfony-api-dev-HttpApiId"
+            }
+          },
+          "HttpApiUrl": {
+            "Description": "URL of the HTTP API",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Ref": "HttpApi"
+                  },
+                  ".execute-api.",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ".",
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  }
+                ]
+              ]
+            },
+            "Export": {
+              "Name": "sls-multi-symfony-api-dev-HttpApiUrl"
+            }
+          }
+        }
+      },
+      "vpc": {}
+    },
+    "plugins": [
+      "./vendor/bref/bref"
+    ],
+    "pluginsData": {},
+    "functions": {
+      "web": {
+        "handler": "public/index.php",
+        "runtime": "provided.al2023",
+        "timeout": 28,
+        "memorySize": 512,
+        "events": [
+          {
+            "httpApi": {
+              "path": "/{proxy+}",
+              "method": "ANY"
+            },
+            "resolvedMethod": "ANY",
+            "resolvedPath": "/{proxy+}"
+          },
+          {
+            "httpApi": {
+              "path": "/",
+              "method": "ANY"
+            },
+            "resolvedMethod": "ANY",
+            "resolvedPath": "/"
+          }
+        ],
+        "name": "multi-symfony-api-dev-web",
+        "layers": {
+          "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"WebLambdaFunction\"][\"Properties\"][\"Layers\"]"
+        },
+        "environment": {
+          "BREF_RUNTIME": "Bref\\FpmRuntime\\Main"
+        },
+        "package": {},
+        "memory": 512,
+        "vpc": {},
+        "versionLogicalId": "WebLambdaVersion4AR5WbkBWRMTAU5CS6Aqox9qlpOTiQZE9J1xg5ooQ"
+      },
+      "console": {
+        "handler": "bin/console",
+        "runtime": "provided.al2023",
+        "timeout": 120,
+        "events": [],
+        "name": "multi-symfony-api-dev-console",
+        "layers": {
+          "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"ConsoleLambdaFunction\"][\"Properties\"][\"Layers\"]"
+        },
+        "environment": {
+          "BREF_RUNTIME": "Bref\\ConsoleRuntime\\Main"
+        },
+        "package": {},
+        "memory": 1024,
+        "vpc": {},
+        "versionLogicalId": "ConsoleLambdaVersion7wyWG5dVpZYByPQzrjKWm0BBlJKmPHNp7OvftnJjBs"
+      }
+    },
+    "configValidationMode": "warn",
+    "serviceFilename": "serverless",
+    "initialServerlessConfig": {
+      "service": "multi-symfony-api",
+      "provider": {
+        "$ref": "$[\"service\"][\"provider\"]"
+      },
+      "functions": {
+        "$ref": "$[\"service\"][\"functions\"]"
+      },
+      "plugins": {
+        "$ref": "$[\"service\"][\"plugins\"]"
+      },
+      "package": {
+        "patterns": [
+          "!node_modules/**",
+          "!tests/**",
+          "!docker/**",
+          "!docs/**",
+          "!.git/**",
+          "!compose*.yaml",
+          "!*.md",
+          "!var/cache/**",
+          "!var/log/**"
+        ],
+        "artifactsS3KeyDirname": "serverless/multi-symfony-api/dev/code-artifacts",
+        "deploymentBucket": "serverless-framework-deployments-eu-west-1-9f8a3f26-6392",
+        "artifact": "/Users/bammac2020/Sites/multi-symfony/.serverless/multi-symfony-api.zip",
+        "artifactDirectoryName": "serverless/multi-symfony-api/dev/1775175396763-2026-04-03T00:16:36.763Z"
+      }
+    },
+    "appId": null,
+    "orgId": null,
+    "layers": {},
+    "artifact": "/Users/bammac2020/Sites/multi-symfony/.serverless/multi-symfony-api.zip"
+  },
+  "package": {
+    "artifactDirectoryName": "serverless/multi-symfony-api/dev/1775175396763-2026-04-03T00:16:36.763Z",
+    "artifact": "multi-symfony-api.zip"
+  }
+}

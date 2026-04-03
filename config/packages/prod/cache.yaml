@@ -1,0 +1,5 @@
+framework:
+    cache:
+        # Lambda is stateless — in-memory cache is sufficient per invocation.
+        # Avoids needing ElastiCache / VPC for a simple serverless deploy.
+        app: cache.adapter.array

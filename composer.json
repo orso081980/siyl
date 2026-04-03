@@ -7,6 +7,8 @@
         "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "bref/bref": "^3.0",
+        "bref/symfony-bridge": "^3.0",
         "doctrine/doctrine-bundle": "^3.2",
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.6",
@@ -73,7 +75,12 @@
             "@auto-scripts"
         ],
         "cs-check": "php-cs-fixer fix --dry-run --diff src/",
-        "cs-fix": "php-cs-fixer fix src/"
+        "cs-fix": "php-cs-fixer fix src/",
+        "deploy:prod": [
+            "composer install --no-dev --optimize-autoloader --classmap-authoritative",
+            "APP_ENV=prod php bin/console cache:warmup",
+            "serverless deploy --stage prod"
+        ]
     },
     "conflict": {
         "symfony/symfony": "*"

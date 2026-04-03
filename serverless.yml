@@ -1,0 +1,56 @@
+service: multi-symfony-api
+
+provider:
+  name: aws
+  region: eu-west-1   # Ireland — closest to Neon eu-west-2 (London)
+  runtime: provided.al2023
+  environment:
+    APP_ENV: prod
+    APP_DEBUG: "0"
+    APP_SECRET: ${ssm:/multi-symfony/APP_SECRET}
+    DATABASE_URL: ${ssm:/multi-symfony/DATABASE_URL}
+    JWT_SECRET_KEY: /var/task/config/jwt/private.pem
+    JWT_PUBLIC_KEY: /var/task/config/jwt/public.pem
+    JWT_PASSPHRASE: ${ssm:/multi-symfony/JWT_PASSPHRASE}
+    CORS_ALLOW_ORIGIN: ${ssm:/multi-symfony/CORS_ALLOW_ORIGIN}
+    DEFAULT_URI: ${ssm:/multi-symfony/DEFAULT_URI}
+    # base cache.yaml references this env var; we override the adapter to
+    # cache.adapter.array in prod, so no Redis connection is ever opened —
+    # but the env var must exist or Symfony throws EnvNotFoundException.
+    REDIS_URL: redis://localhost:6379
+
+functions:
+  # Bref 3: set runtime directly; plugin auto-injects the FPM layer
+  web:
+    handler: public/index.php
+    runtime: php-84-fpm
+    timeout: 28          # API Gateway HTTP API hard max is 29 s
+    memorySize: 512
+    events:
+      - httpApi:
+          path: /{proxy+}
+          method: ANY
+      - httpApi:
+          path: /
+          method: ANY
+
+  # Bref 3 console runner
+  console:
+    handler: bin/console
+    runtime: php-84-console
+    timeout: 120
+
+plugins:
+  - ./vendor/bref/bref
+
+package:
+  patterns:
+    - '!node_modules/**'
+    - '!tests/**'
+    - '!docker/**'
+    - '!docs/**'
+    - '!.git/**'
+    - '!compose*.yaml'
+    - '!*.md'
+    - '!var/cache/**'
+    - '!var/log/**'

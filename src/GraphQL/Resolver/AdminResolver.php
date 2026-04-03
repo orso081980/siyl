@@ -46,7 +46,7 @@ final class AdminResolver
         $page = max(1, (int) ($args['page'] ?? 1));
         $limit = min(100, max(1, (int) ($args['limit'] ?? 20)));
 
-        return $this->professionalRepo->findAllFiltered(null, null, $page, $limit);
+        return $this->professionalRepo->findAllFiltered(null, null, null, null, $page, $limit);
     }
 
     public function getAllAdmins(array $args, User|Professional|Admin|null $currentUser): array

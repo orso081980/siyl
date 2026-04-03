@@ -253,9 +253,11 @@ final class AuthController extends AbstractController
             ->withValue($newRefreshToken)
             ->withExpires(time() + self::REFRESH_TTL)
             ->withPath('/')
-            ->withSecure($request->isSecure()) // true in production (HTTPS), false in dev (HTTP)
-            ->withHttpOnly(true)               // invisible to JavaScript
-            ->withSameSite(Cookie::SAMESITE_STRICT); // safe for same-site; change to None + Secure for cross-domain
+            ->withSecure($request->isSecure())
+            ->withHttpOnly(true)
+            // SameSite=None when running over HTTPS (e.g. AWS API Gateway) so the cookie
+            // is sent from a cross-origin SPA. SameSite=Strict for local HTTP dev.
+            ->withSameSite($request->isSecure() ? Cookie::SAMESITE_NONE : Cookie::SAMESITE_STRICT);
 
         $response->headers->setCookie($cookie);
 
