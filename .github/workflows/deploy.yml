@@ -79,7 +79,7 @@ jobs:
                   node-version: "20"
 
             - name: Install Serverless Framework
-              run: npm install -g serverless
+              run: npm install -g serverless@3
 
             # ── 6. Deploy ─────────────────────────────────────────────────────────
             - name: Deploy to AWS Lambda
