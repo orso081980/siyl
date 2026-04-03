@@ -53,9 +53,11 @@ jobs:
                   DEFAULT_URI=placeholder
                   REDIS_URL=redis://localhost:6379
                   EOF
+                  # Remove leading whitespace added by YAML indentation
+                  sed -i 's/^[[:space:]]*//' .env
 
             - name: Dump env for production
-              run: APP_ENV=prod php bin/console dotenv:dump prod
+              run: composer dump-env prod
 
             - name: Warm cache for production
               run: APP_ENV=prod php bin/console cache:warmup
