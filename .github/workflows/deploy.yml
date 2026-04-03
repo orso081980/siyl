@@ -62,15 +62,28 @@ jobs:
             - name: Warm cache for production
               run: APP_ENV=prod php bin/console cache:warmup
 
-            # ── 4. JWT keys (stored as GitHub Secrets, base64-encoded) ────────────
-            # To add them:
-            #   JWT_PRIVATE_KEY = base64 < config/jwt/private.pem
-            #   JWT_PUBLIC_KEY  = base64 < config/jwt/public.pem
+            # ── 4. JWT keys ───────────────────────────────────────────────────────
+            # Store the raw PEM file contents as GitHub Secrets:
+            #   JWT_PRIVATE_KEY = paste the full contents of config/jwt/private.pem
+            #   JWT_PUBLIC_KEY  = paste the full contents of config/jwt/public.pem
+            # Using env: prevents shell injection and preserves multiline values.
             - name: Restore JWT keys
+              env:
+                  JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+                  JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
               run: |
                   mkdir -p config/jwt
-                  echo "${{ secrets.JWT_PRIVATE_KEY }}" | base64 --decode > config/jwt/private.pem
-                  echo "${{ secrets.JWT_PUBLIC_KEY }}"  | base64 --decode > config/jwt/public.pem
+                  printf '%s\n' "$JWT_PRIVATE_KEY" > config/jwt/private.pem
+                  printf '%s\n' "$JWT_PUBLIC_KEY"  > config/jwt/public.pem
+                  # Verify the files were written correctly
+                  if [ ! -s config/jwt/private.pem ]; then
+                    echo "ERROR: JWT_PRIVATE_KEY secret is not set or empty" >&2
+                    exit 1
+                  fi
+                  if [ ! -s config/jwt/public.pem ]; then
+                    echo "ERROR: JWT_PUBLIC_KEY secret is not set or empty" >&2
+                    exit 1
+                  fi
 
             # ── 5. Node + Serverless Framework ────────────────────────────────────
             - name: Set up Node.js

@@ -374,4 +374,3 @@ class SeedDataCommand extends Command
         return Command::SUCCESS;
     }
 }
-// test
